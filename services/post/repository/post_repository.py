@@ -23,8 +23,11 @@ class PostRepository:
         self.db.session.commit()
 
     def read(self, post_id):
-        post = PostDB.query.filter_by(id=post_id).first()
-        return Post(post_id=post.id, user_id=post.user_id, date=post.date, text=post.text)
+        if self.exists(post_id):
+            post = PostDB.query.filter_by(id=post_id).first()
+            return Post(post_id=post.id, user_id=post.user_id, date=post.date, text=post.text)
+        else:
+            return None
 
     def read_all(self):
         posts = []
@@ -33,13 +36,18 @@ class PostRepository:
         return posts
 
     def update(self, post):
-        post_to_update = PostDB.query.filter_by(id=post.id).first()
-        post_to_update.user_id = post.user_id
-        post_to_update.text = post.text
-        post_to_update.date = post.date
-        self.db.session.commit()
+        if self.exists(post.id):
+            post_to_update = PostDB.query.filter_by(id=post.id).first()
+            post_to_update.user_id = post.user_id
+            post_to_update.text = post.text
+            post_to_update.date = post.date
+            self.db.session.commit()
 
     def delete(self, post):
-        post_to_delete = PostDB.query.get(post.id)
-        self.db.session.delete(post_to_delete)
-        self.db.session.commit()
+        if self.exists(post.id):
+            post_to_delete = PostDB.query.get(post.id)
+            self.db.session.delete(post_to_delete)
+            self.db.session.commit()
+
+    def exists(self, post_id):
+        return self.db.session.query(PostDB.query.filter(PostDB.id == post_id).exists()).scalar()
