@@ -1,5 +1,3 @@
-
-
 class Post:
     def __init__(self, post_id, user_id, date, text):
         self.id = post_id

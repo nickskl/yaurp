@@ -1,9 +1,8 @@
 from flask_restful import  Resource, abort, reqparse
 from services.post.repository.post_repository import PostRepository
-import flask
+from services.post import app
 from datetime import *
 
-app = flask.current_app
 repo = PostRepository(app)
 parser = reqparse.RequestParser()
 parser.add_argument("user_id", type=int)

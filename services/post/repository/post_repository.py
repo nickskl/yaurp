@@ -1,17 +1,18 @@
-import flask
 from flask_sqlalchemy import SQLAlchemy
 from services.post.domain.post import Post
+from services.post import app
 
 
-app = flask.current_app
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://admin:QAZxsw2!@localhost/posts_db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 
 class PostDB(db.Model):
-    id = db.column(db.Integer, primary_key=True)
-    user_id = db.column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    text = db.column(db.Text)
-    date = db.column(db.DateTime, nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, nullable=False)
+    text = db.Column(db.Text)
+    date = db.Column(db.DateTime, nullable=False)
 
 
 class PostRepository:
