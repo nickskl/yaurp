@@ -3,15 +3,14 @@ from services.post.domain.post import Post
 from services.post import app
 
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://admin:QAZxsw2!@localhost/posts_db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 
 class PostDB(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
-    text = db.Column(db.Text)
+    title = db.Column(db.Text, nullable=False)
+    text = db.Column(db.Text, nullable=False)
     date = db.Column(db.DateTime, nullable=False)
 
 
@@ -32,10 +31,21 @@ class PostRepository:
         else:
             return None
 
-    def read_all(self):
+    def read_all_by_criteria(self, criteria):
         posts = []
-        for post in PostDB.query.all():
-            posts.append(Post(post_id=post.id, user_id=post.user_id, date=post.date, text=post.text))
+        if criteria is None:
+            posts_from_db = PostDB.query.all()
+        else:
+            posts_from_db = PostDB.query
+            if "author_id" in criteria:
+                posts_from_db = posts_from_db.filter_by(user_id=criteria["author_id"]).all()
+            if "title" in criteria:
+                posts_from_db = posts_from_db.filter(PostDB.title.like("%"+criteria["title"]+"%")).all()
+            if "after_date" in criteria:
+                posts_from_db = posts_from_db.filter(PostDB.date > criteria["after_date"]).all()
+
+        for post in posts_from_db:
+            posts.append(Post(post_id=post.id, user_id=post.user_id, date=post.date, text=post.text, title=post.title))
         return posts
 
     def update(self, post_id, user_id, text, date):

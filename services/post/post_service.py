@@ -1,9 +1,11 @@
 from services.post import app
 from flask_restful import Api
 from services.post.rest_api.post_resource import PostListResource, PostResource
+from services.post.config import DevelopmentConfig
 from services.post.security.security import context
 
-app.config['SECRET_KEY'] = 'post-service-secret'
+
+app.config.from_object(DevelopmentConfig)
 api = Api(app)
 service_namespace = "/posts"
 
