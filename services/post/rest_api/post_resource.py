@@ -11,7 +11,7 @@ parser = reqparse.RequestParser()
 parser.add_argument("user_id", type=int)
 parser.add_argument("date", type=lambda x: datetime.strptime(x,"%d-%m-%Y %H:%M:%S"))
 parser.add_argument("text")
-parser.add_argument("criteria")
+parser.add_argument("criteria", type=dict)
 
 
 def abort_if_post_doesnt_exist(post_id):

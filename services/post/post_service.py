@@ -15,4 +15,4 @@ api.add_resource(PostListResource, service_namespace)
 
 if __name__ == '__main__':
     # app.run(debug=True, ssl_context=context)
-    app.run(debug=True)
+    app.run(debug=True, port=5001)
