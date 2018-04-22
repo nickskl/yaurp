@@ -12,9 +12,10 @@ service_namespace = "/gateway"
 
 #api.add_resource(PostResource, service_namespace + "/<post_id>")
 #api.add_resource(PostListResource, service_namespace)
-api.add_resource(GatewayAuthorizationResource, Config.GATEWAY_URL + Config.AUTH_URL_PATH)
-api.add_resource(GatewayTokenResource, Config.GATEWAY_URL + Config.TOKEN_URL_PATH)
+api.add_resource(GatewayAuthorizationResource, Config.GATEWAY_URL + Config.USER_SERVICE_PATH + Config.CHECK_ROLE_URL_PATH)
+api.add_resource(GatewayTokenResource, Config.GATEWAY_URL + Config.USER_SERVICE_PATH + Config.GET_TOKEN_URL_PATH)
+api.add_resource(GatewayTokenGetUserIdResource, Config.GATEWAY_URL + Config.USER_SERVICE_PATH + Config.TOKEN_CHECK_ID_URL_PATH)
 
 if __name__ == '__main__':
     # app.run(debug=True, ssl_context=context)
-    app.run(debug=True)
+    app.run()

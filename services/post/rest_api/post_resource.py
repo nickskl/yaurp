@@ -22,14 +22,13 @@ def abort_if_post_doesnt_exist(post_id):
 class PostResource(Resource):
     def get(self, post_id):
         abort_if_post_doesnt_exist(post_id)
-        return repo.read(post_id)
+        return repo.get(post_id)
 
-    @login_required
     def delete(self, post_id):
         abort_if_post_doesnt_exist(post_id)
-        post = repo.read(post_id)
-        if (check_current_user_id(current_user, post.user_id) or
-            check_if_current_user_is_privileged(current_user)):
+        post = repo.get(post_id)
+        if (check_current_user_id(post.user_id) or
+            check_if_current_user_is_privileged()):
 
             repo.delete(post_id)
             return '', 204

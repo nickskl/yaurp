@@ -6,11 +6,17 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = ""
     SECRET_KEY = "qwerty1234"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    USER_SERVICE_URL = "/users"
+    USER_SERVICE_PATH = "/users"
+    USER_URL_PATH = "/<user_id>"
+    CHECK_ROLE_URL_PATH = "/auth/check_role"
+    GET_TOKEN_URL_PATH = "/auth/token"
+    TOKEN_CHECK_ID_URL_PATH = "/auth/token/check_id"
 
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    PORT = 5001
+    USER_SERVICE_URL = "http://127.0.0.1:%d" % PORT
     SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://tester:111@localhost/users_db"
     TOKEN_EXPIRATION_TIME = 2000
 

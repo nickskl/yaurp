@@ -27,7 +27,7 @@ class PostRepository:
         self.db.session.commit()
         return post.id
 
-    def read(self, post_id):
+    def get(self, post_id):
         if self.exists(post_id):
             post = Posts.query.filter_by(id=post_id).first()
             return Post(post_id=post.id, user_id=post.user_id, date=post.date, text=post.text)
