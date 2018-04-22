@@ -4,6 +4,7 @@ from services.post.repository.post_repository import PostRepository
 from services.post.security.security import check_current_user_id, check_if_current_user_is_privileged
 from services.post import app
 from datetime import *
+import jsonpickle
 
 
 repo = PostRepository(app)
@@ -22,7 +23,11 @@ def abort_if_post_doesnt_exist(post_id):
 class PostResource(Resource):
     def get(self, post_id):
         abort_if_post_doesnt_exist(post_id)
-        return repo.get(post_id)
+        post = repo.get(post_id)
+        response = app.make_response("")
+        response.status_code = 200
+        response.data = jsonpickle.encode(post)
+        return response
 
     def delete(self, post_id):
         abort_if_post_doesnt_exist(post_id)

@@ -1,6 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from services.post.domain.post import Post
 from services.post import app
+import datetime
+import jsonpickle
 
 
 db = SQLAlchemy(app)
@@ -9,9 +11,11 @@ db = SQLAlchemy(app)
 class Posts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, nullable=False)
-    title = db.Column(db.Text, nullable=False)
+    title = db.Column(db.String(255), nullable=False)
     text = db.Column(db.Text, nullable=False)
-    date = db.Column(db.DateTime, nullable=False)
+    created = db.Column(db.DateTime, nullable=False)
+    last_updated = db.Column(db.DateTime)
+
 
 db.create_all()
 db.session.commit()
@@ -21,8 +25,8 @@ class PostRepository:
     def __init__(self, app):
         self.db = SQLAlchemy(app)
 
-    def create(self, user_id, text, date):
-        post = Posts(user_id=user_id, text=text, date=date)
+    def create(self, user_id, title, text):
+        post = Posts(user_id=user_id, title=title, text=text, date=datetime.datetime.now())
         self.db.session.add(post)
         self.db.session.commit()
         return post.id
@@ -30,8 +34,10 @@ class PostRepository:
     def get(self, post_id):
         if self.exists(post_id):
             post = Posts.query.filter_by(id=post_id).first()
-            return Post(post_id=post.id, user_id=post.user_id, date=post.date, text=post.text)
+            return jsonpickle.encode(Post(post_id=post.id, user_id=post.user_id, created=post.date.isoformat(), text=post.text,
+                        title=post.title))
         else:
+
             return None
 
     def read_all_by_criteria(self, criteria):
