@@ -39,7 +39,8 @@ class PostResource(Resource):
         args = parser.parse_args(strict=True)
         abort_if_post_doesnt_exist(post_id)
         post_id = repo.update(post_id, args["user_id"], args["date"], args["text"])
-        return repo.read(post_id), 201
+        return repo.get(post_id), 201
+
 
 class PostListResource(Resource):
     def get(self, criteria = None):
@@ -48,4 +49,4 @@ class PostListResource(Resource):
     def post(self):
         args = parser.parse_args(strict=True)
         post_id = repo.create(args["user_id"], args["date"], args["text"])
-        return repo.read(post_id), 201
+        return repo.get(post_id), 201
