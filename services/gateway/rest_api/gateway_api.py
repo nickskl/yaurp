@@ -26,11 +26,11 @@ class GatewayAuthorizationResource(Resource):
         sess = requests.session()
         for cookie in flask.request.cookies:
             sess.cookies[cookie] = flask.request.cookies[cookie]
-        args = parser.parse_args(strict=True)
+            args = parser.parse_args(strict=True)
         role = args['role']
         payload = (('role', role), )
         resp = sess.get("http://127.0.0.1:1234" + Config.USER_SERVICE_URL + Config.AUTH_URL_PATH, params=payload)
-        result = flask.Response(status=resp.status_code, headers=resp.headers.items())
+        result = flask.Response(status=resp.status_code, headers=resp.headers.items(), response=resp.content)
         return result
 
 
@@ -46,5 +46,7 @@ class GatewayTokenResource(Resource):
         resp = sess.get("http://127.0.0.1:1234" + Config.USER_SERVICE_URL + Config.TOKEN_URL_PATH, params=payload)
 
         result = flask.Response(status=resp.status_code,headers=resp.headers.items())
-        result.set_cookie('token', sess.cookies['token'])
+        #if 'token' in sess.cookies:
+            #result.delete_cookie('token')
+            #result.set_cookie('token', sess.cookies['token'])
         return result

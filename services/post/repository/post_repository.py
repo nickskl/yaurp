@@ -16,6 +16,7 @@ class Posts(db.Model):
 db.create_all()
 db.session.commit()
 
+
 class PostRepository:
     def __init__(self, app):
         self.db = SQLAlchemy(app)
@@ -65,4 +66,4 @@ class PostRepository:
             self.db.session.commit()
 
     def exists(self, post_id):
-        return self.db.session.query(Posts.query.filter(Posts.id == post_id).exists()).scalar()
+        return self.db.session.query(Posts.query.filter(Posts.id == post_id).user_exists()).scalar()

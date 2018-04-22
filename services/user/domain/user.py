@@ -2,12 +2,10 @@ from flask_login import LoginManager, UserMixin, login_required, AnonymousUserMi
 
 
 class User(UserMixin):
-    def __init__(self, identifier, username, password, active, token):
+    def __init__(self, identifier, username, active):
         self.id = identifier
         self.username = username
-        self.password = password
         self.active = active
-        self.token = token
 
     def is_active(self):
         return self.active

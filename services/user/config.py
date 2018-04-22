@@ -12,5 +12,5 @@ class Config(object):
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://tester:111@localhost/users_db"
-    TOKEN_EXPIRATION_TIME = 300
+    TOKEN_EXPIRATION_TIME = 2000
 
