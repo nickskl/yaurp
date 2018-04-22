@@ -35,19 +35,16 @@ class PostResource(Resource):
         else:
             abort(403, message="You have not enough privileges to delete selected post")
 
-    @login_required
     def patch(self, post_id):
         args = parser.parse_args(strict=True)
         abort_if_post_doesnt_exist(post_id)
         post_id = repo.update(post_id, args["user_id"], args["date"], args["text"])
         return repo.read(post_id), 201
 
-
 class PostListResource(Resource):
     def get(self, criteria = None):
         return repo.read_all_by_criteria(criteria)
 
-    @login_required
     def post(self):
         args = parser.parse_args(strict=True)
         post_id = repo.create(args["user_id"], args["date"], args["text"])

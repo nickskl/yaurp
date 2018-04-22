@@ -4,13 +4,14 @@ class Config(object):
     DEBUG = False
     TESTING = False
     SECRET_KEY = "qwerty1234"
-    GATEWAY_URL = "/gateway/api"
+    GATEWAY_PATH = "/gateway/api"
 
     POST_SERVICE_PATH = "/posts"
 
     STATISTICS_SERVICE_PATH = "/statistics"
 
     USER_SERVICE_PATH = "/users"
+
     USER_URL_PATH = "/<user_id>"
     CHECK_ROLE_URL_PATH = "/auth/check_role"
     GET_TOKEN_URL_PATH = "/auth/token"
