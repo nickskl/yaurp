@@ -1,5 +1,5 @@
 from OpenSSL import SSL
-from services.post.config import Config
+from services.post.config import *
 import flask
 from flask_restful import reqparse
 import requests
@@ -19,10 +19,14 @@ def check_current_user_id(expected_id):
     sess = requests.session()
     for cookie in flask.request.cookies:
         sess.cookies[cookie] = flask.request.cookies[cookie]
-
-    resp = sess.get("http://127.0.0.1:5000" + Config.GATEWAY_URL + Config.AUTH_URL_PATH, params=payload)
+    payload = (("id", expected_id),)
+    resp = sess.get(DevelopmentConfig.GATEWAY_SERVICE_URL + Config.GATEWAY_URL_PATH + Config.TOKEN_CHECK_ID_URL_PATH, params=payload)
     result = flask.Response(status=resp.status_code, headers=resp.headers.items(), response=resp.content)
     return result
+
+
+def check_if_current_user_is_guest():
+    pass
 
 
 def check_if_current_user_is_privileged():
@@ -30,6 +34,6 @@ def check_if_current_user_is_privileged():
     for cookie in flask.request.cookies:
         sess.cookies[cookie] = flask.request.cookies[cookie]
     payload = (("role", "admin"),)
-    resp = sess.get("http://127.0.0.1:5000" + Config.GATEWAY_URL + Config.AUTH_URL_PATH, params=payload)
+    resp = sess.get(DevelopmentConfig.GATEWAY_SERVICE_URL + Config.GATEWAY_URL_PATH + Config.CHECK_ROLE_URL_PATH, params=payload)
     result = jsonpickle.decode(resp.content)
     return result

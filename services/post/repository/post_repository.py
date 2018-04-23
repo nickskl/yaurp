@@ -22,13 +22,10 @@ db.session.commit()
 
 
 class PostRepository:
-    def __init__(self, app):
-        self.db = SQLAlchemy(app)
-
     def create(self, user_id, title, text):
         post = Posts(user_id=user_id, title=title, text=text, date=datetime.datetime.now())
-        self.db.session.add(post)
-        self.db.session.commit()
+        db.session.add(post)
+        db.session.commit()
         return post.id
 
     def get(self, post_id):
@@ -63,13 +60,13 @@ class PostRepository:
             post_to_update.user_id = user_id
             post_to_update.text = text
             post_to_update.date = date
-            self.db.session.commit()
+            db.session.commit()
 
     def delete(self, post_id):
         if self.exists(post_id):
             post_to_delete = Posts.query.get(post_id)
-            self.db.session.delete(post_to_delete)
-            self.db.session.commit()
+            db.session.delete(post_to_delete)
+            db.session.commit()
 
     def exists(self, post_id):
-        return self.db.session.query(Posts.query.filter(Posts.id == post_id).user_exists()).scalar()
+        return db.session.query(Posts.query.filter(Posts.id == post_id).user_exists()).scalar()
