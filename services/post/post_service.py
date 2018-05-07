@@ -1,6 +1,6 @@
 from services.post import app
 from flask_restful import Api
-from services.post.rest_api.post_resource import PostListResource, PostResource
+from services.post.rest_api.post_resource import *
 from services.post.config import DevelopmentConfig
 from services.post.security.security import context
 
@@ -9,8 +9,10 @@ app.config.from_object(DevelopmentConfig)
 api = Api(app)
 service_namespace = "/posts"
 
-api.add_resource(PostResource, service_namespace + "/<post_id>")
-api.add_resource(PostListResource, service_namespace)
+api.add_resource(PostResource, DevelopmentConfig.POST_SERVICE_URL + Config.POST_SERVICE_PATH + Config.POST_URL_PATH)
+api.add_resource(PostListResource, DevelopmentConfig.POST_SERVICE_URL + Config.POST_SERVICE_PATH)
+api.add_resource(PostCreateResource, DevelopmentConfig.POST_SERVICE_URL + Config.POST_SERVICE_PATH +
+                 Config.POST_CREATE_URL_PATH)
 
 
 if __name__ == '__main__':

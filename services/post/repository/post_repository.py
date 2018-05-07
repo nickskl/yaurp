@@ -3,7 +3,7 @@ from services.post.domain.post import Post
 from services.post import app
 import datetime
 import jsonpickle
-
+import dateutil.parser
 
 db = SQLAlchemy(app)
 
@@ -32,26 +32,28 @@ class PostRepository:
         if self.exists(post_id):
             post = Posts.query.filter_by(id=post_id).first()
             return jsonpickle.encode(Post(post_id=post.id, user_id=post.user_id, created=post.date.isoformat(), text=post.text,
-                        title=post.title))
+                        title=post.title, updated=post.updated))
         else:
 
             return None
 
-    def read_all_by_criteria(self, criteria):
+    def read_all_by_criteria(self, criteria, value):
         posts = []
-        if criteria is None:
+        if (criteria is None or
+                value is None):
             posts_from_db = Posts.query.all()
         else:
             posts_from_db = Posts.query
-            if "author_id" in criteria:
-                posts_from_db = posts_from_db.filter_by(user_id=criteria["author_id"]).all()
-            if "title" in criteria:
-                posts_from_db = posts_from_db.filter(Posts.title.like("%" + criteria["title"] + "%")).all()
-            if "after_date" in criteria:
-                posts_from_db = posts_from_db.filter(Posts.date > criteria["after_date"]).all()
+            if "author_id" == criteria:
+                posts_from_db = posts_from_db.filter_by(user_id=value).all()
+            if "title" == criteria:
+                posts_from_db = posts_from_db.filter(Posts.title.like("%" + value + "%")).all()
+            if "after_date" == criteria:
+                posts_from_db = posts_from_db.filter(Posts.created > dateutil.parser.parse(value)).all()
 
         for post in posts_from_db:
-            posts.append(Post(post_id=post.id, user_id=post.user_id, date=post.date, text=post.text, title=post.title))
+            posts.append(Post(post_id=post.id, user_id=post.user_id, created=post.created, updated=post.updated,
+                              text=post.text, title=post.title))
         return posts
 
     def update(self, post_id, user_id, text, date):

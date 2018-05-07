@@ -1,7 +1,7 @@
 from flask_restful import Resource, abort, reqparse
 import flask
 from services.post.repository.post_repository import PostRepository
-from services.post.security.security import check_current_user_id, check_if_current_user_is_privileged
+from services.post.security.security import *
 from services.post import app
 import jsonpickle
 
@@ -52,15 +52,18 @@ class PostResource(Resource):
 
 
 class PostCreateResource(Resource):
-
     def post(self):
-        abort_if_post_doesnt_exist(post_id)
         payload = jsonpickle.decode(flask.request.data)
-        if (not check_if_user_is_guest() and
+        if (not check_if_current_user_is_guest() and
                 check_current_user_id(payload["user_id"])):
 
-            post_id = repo.create(args["user_id"], args["date"], args["text"])
-        return repo.get(post_id), 201
+            post_id = repo.create(payload["user_id"], payload["title"], payload["text"])
+            post = repo.get(post_id)
+            response = app.make_response("")
+            response.status_code = 201
+            response.data = jsonpickle.encode(post)
+            return response
+        abort(403, message="You have not enough privileges to create post")
 
 
 class PostListResource(Resource):
@@ -68,5 +71,11 @@ class PostListResource(Resource):
     parser.add_argument("criteria", type=str)
     parser.add_argument("search_value", type=str)
 
-    def get(self, criteria = None):
-        return repo.read_all_by_criteria(criteria)
+    def get(self):
+        args = self.parser.parse_args(strict=True)
+        posts_list = repo.read_all_by_criteria(args["criteria"], args["value"])
+        response = app.make_response("")
+        response.status_code = 200
+        response.data = jsonpickle.encode(posts_list)
+        return response
+

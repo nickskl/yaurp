@@ -6,8 +6,7 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = ""
     SECRET_KEY = "qwerty1234"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    USER_SERVICE_PATH = "/users"
-    USER_URL_PATH = "/<user_id>"
+    STAT_SERVICE_PATH = "/statistics"
 
     GATEWAY_URL_PATH = "/gateway/api"
     CHECK_ROLE_URL_PATH = "/auth/check_role"
@@ -23,4 +22,4 @@ class DevelopmentConfig(Config):
 
     SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://tester:111@localhost/users_db"
     TOKEN_EXPIRATION_TIME = 2000
-
+    TRUSTED_SERVICE = "gateway"
