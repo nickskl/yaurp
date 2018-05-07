@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block title %}Регистрация{% endblock %}
+{% block body %}
+  <form action="" method=post>
+    <p>
+      Логин: <input type=text name=login class=login size=30>
+      Пароль: <input type=password name=password class=password size=30>
+      <input type=hidden name=next value="{{ next }}">
+      <input type=submit value=Register>
+    <p>
+  </form>
+{% endblock %}

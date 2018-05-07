@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %}Войти{% endblock %}
+{% block body %}
+  <form action="" method=post>
+      <input type=text placeholder="Логин" name=login value="{{ request.form.username }}">
+      <input type=password placeholder="Пароль" name=password value="{{ request.form.password }}">
+      <input type=hidden name=next value="{{ next }}">
+      <p>
+      <input type=submit value=Войти>
+    <ul>
+      <li><a href=?provider=google>Войти через аккаунт Google</a>
+    </ul>
+  </form>
+{% endblock %}

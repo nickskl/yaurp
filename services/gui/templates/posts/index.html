@@ -1,0 +1,10 @@
+{% extends "posts/layout.html" %}
+{% block body %}
+    <p class=nav>
+    Публикации:
+    <a href="{{ url_for('posts.index') }}">Все</a>
+    <a href="{{ url_for('posts.search') }}">Поиск</a>
+    {% if able_to_publish %}
+        <a href="{{ url_for('posts.create') }}">Создать</a>
+    {% endif %}
+{% endblock %}
