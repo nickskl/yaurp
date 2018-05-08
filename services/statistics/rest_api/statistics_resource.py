@@ -19,7 +19,7 @@ class StatisticsResource(Resource):
 
     def post(self):
         if 'token' in request.cookies:
-            result = check_value(DevelopmentConfig.TRUSTED_SERVICE)
+            result = check_value(current_config.TRUSTED_SERVICE)
             if result:
                 payload = jsonpickle.decode(flask.request.data)
                 repo.create(payload["type"], payload["data"])

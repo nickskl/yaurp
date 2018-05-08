@@ -23,3 +23,5 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://tester:111@localhost/users_db"
     TOKEN_EXPIRATION_TIME = 2000
     TRUSTED_SERVICE = "gateway"
+
+current_config = DevelopmentConfig()

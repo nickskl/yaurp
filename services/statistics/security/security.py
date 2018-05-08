@@ -1,5 +1,5 @@
 from OpenSSL import SSL
-from services.statistics.config import *
+from services.statistics .config import current_config
 import flask
 import requests
 import jsonpickle
@@ -14,8 +14,8 @@ def check_value(value):
     for cookie in flask.request.cookies:
         sess.cookies[cookie] = flask.request.cookies[cookie]
     payload = (("id", value),)
-    resp = sess.get(DevelopmentConfig.GATEWAY_SERVICE_URL + Config.GATEWAY_URL_PATH +
-                    Config.TOKEN_CHECK_ID_URL_PATH, params=payload)
+    resp = sess.get(current_config.GATEWAY_SERVICE_URL + current_config.GATEWAY_URL_PATH +
+                    current_config.TOKEN_CHECK_ID_URL_PATH, params=payload)
     result = flask.Response(status=resp.status_code, headers=resp.headers.items(), response=resp.content)
     return result
 
@@ -25,7 +25,7 @@ def check_if_current_user_is_privileged():
     for cookie in flask.request.cookies:
         sess.cookies[cookie] = flask.request.cookies[cookie]
     payload = (("role", "admin"),)
-    resp = sess.get(DevelopmentConfig.GATEWAY_SERVICE_URL + Config.GATEWAY_URL_PATH +
-                    Config.CHECK_ROLE_URL_PATH, params=payload)
+    resp = sess.get(current_config.GATEWAY_SERVICE_URL + current_config.GATEWAY_URL_PATH +
+                    current_config.CHECK_ROLE_URL_PATH, params=payload)
     result = jsonpickle.decode(resp.content)
     return result

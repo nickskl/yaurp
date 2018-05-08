@@ -1,5 +1,3 @@
-
-
 class Config(object):
     DEBUG = False
     TESTING = False
@@ -22,3 +20,5 @@ class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://tester:111@localhost/posts_db"
     GATEWAY_SERVICE_URL = "http://127.0.0.1:5000"
 
+
+current_config = DevelopmentConfig()
