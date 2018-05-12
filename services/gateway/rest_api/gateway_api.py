@@ -110,6 +110,8 @@ class GatewayUserAuthorizationResource(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument("login", type=str)
     parser.add_argument("password", type=str)
+    parser.add_argument("role", type='str')
+
 
     def get(self):
         sess = requests.session()
@@ -122,6 +124,23 @@ class GatewayUserAuthorizationResource(Resource):
         resp = sess.get(current_config.USER_SERVICE_URL + current_config.USER_SERVICE_PATH + current_config.GET_TOKEN_URL_PATH,
                         params=payload)
         result = flask.Response(status=resp.status_code,headers=resp.headers.items(), response=resp.content)
+        return result
+
+    def post(self):
+        sess = requests.session()
+        for cookie in flask.request.cookies:
+            sess.cookies[cookie] = flask.request.cookies[cookie]
+        args = self.parser.parse_args(strict=True)
+        login = args['login']
+        password = args['password']
+        if 'role' in args and args['role'] is not None:
+            payload = (('login', login), ('password', password), ('role', args['role']))
+        else:
+            payload = (('login', login), ('password', password))
+        resp = sess.post(
+            current_config.USER_SERVICE_URL + current_config.USER_SERVICE_PATH + current_config.GET_TOKEN_URL_PATH,
+            params=payload)
+        result = flask.Response(status=resp.status_code, headers=resp.headers.items(), response=resp.content)
         return result
 
     def put(self):

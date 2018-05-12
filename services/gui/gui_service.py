@@ -1,5 +1,8 @@
 from flask import Flask, session, g, render_template, request
 from services.gui import app
+from services.gui.config import current_config
+from services.gui.utils import do_check_admin, do_check_publisher
+import jsonpickle
 
 
 @app.errorhandler(404)
@@ -9,10 +12,19 @@ def not_found(error):
 
 @app.before_request
 def load_current_user():
+
     if 'token' in request.cookies:
-        g.user = request.cookies['token']
+        result = do_check_admin(request.cookies)
+        g.is_admin = jsonpickle.decode(result.response.content)
+        result = do_check_publisher(result.response.cookies)
+        g.is_publisher = jsonpickle.decode(result.response.content)
+        g.logged_in = True
+        g.user = result.response.cookies['token']
     else:
         g.user = None
+        g.is_admin = False
+        g.is_publisher = False
+        g.logged_in = False
 
 
 #@app.teardown_request
@@ -38,4 +50,4 @@ app.register_blueprint(posts.mod)
 app.register_blueprint(statistics.mod)
 app.register_blueprint(users.mod)
 
-app.run(debug=True)
+app.run(port=current_config.PORT)

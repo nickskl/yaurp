@@ -1,5 +1,5 @@
 from OpenSSL import SSL
-from services.post .config import current_config
+from services.post.config import current_config
 import flask
 from flask_restful import reqparse
 import requests

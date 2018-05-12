@@ -1,7 +1,7 @@
 from services.post import app
 from flask_restful import Api
 from services.post.rest_api.post_resource import PostListResource, PostResource
-from services.post .config import current_config
+from services.post.config import current_config
 from services.post.security.security import context
 from services.gateway.rest_api.gateway_api import *
 

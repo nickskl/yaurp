@@ -70,9 +70,11 @@ class UserRepository:
 
     def get_token(self,login, password):
         if self.user_exists(login):
-            user = Users.query.filter_by(login=login).first()
+            user = self.get_user(login=login)
             if user.password == password:
                 t = Token.generate(login).serialize()
+                user.user_token = t
+                db.session.commit()
                 return t
         return None
 
@@ -92,7 +94,11 @@ class UserRepository:
     def refresh_token(self, token):
         login = Token.get_value(token)
         if self.user_exists(login):
-            return Token.refresh(token)
+            t = Token.refresh(token)
+            user = self.get_user(login)
+            user.user_token = t
+            db.session.commit()
+            return t
         return None
 
     def delete(self, login):
@@ -103,3 +109,4 @@ class UserRepository:
 
     def user_exists(self, login):
         return db.session.query(Users.query.filter(Users.login == login).exists()).scalar()
+

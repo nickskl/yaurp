@@ -1,5 +1,5 @@
 from OpenSSL import SSL
-from services.statistics .config import current_config
+from services.statistics.config import current_config
 import flask
 import requests
 import jsonpickle

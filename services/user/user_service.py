@@ -1,7 +1,7 @@
 from services.user import app
 from flask_restful import Api
 from services.user.rest_api.user_resource import *
-from services.user .config import current_config
+from services.user.config import current_config
 
 api = Api(app)
 
@@ -13,4 +13,4 @@ api.add_resource(UserIdCheckResource, current_config.USER_SERVICE_PATH + current
 
 if __name__ == '__main__':
     # app.run(debug=True, ssl_context=context)
-    app.run()
+    app.run(port=current_config.PORT)

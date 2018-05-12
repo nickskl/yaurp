@@ -1,7 +1,7 @@
 from services.post import app
 from flask_restful import Api
 from services.post.rest_api.post_resource import *
-from services.post .config import current_config
+from services.post.config import current_config
 from services.post.security.security import context
 
 
@@ -18,4 +18,4 @@ api.add_resource(PostCreateResource,  current_config.POST_SERVICE_URL + current_
 
 if __name__ == '__main__':
     # app.run(debug=True, ssl_context=context)
-    app.run()
+    app.run(port=current_config.PORT)

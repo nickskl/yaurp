@@ -15,7 +15,23 @@ class StatisticsResource(Resource):
         if 'token' in request.cookies:
             result = check_if_current_user_is_privileged()
             if result:
-                payload
+                args = parser.parse_args(strict=True)
+                if 'type' not in args:
+                    response = app.make_response("Тип возвращаемой статистики не задан")
+                    response.status_code = 400
+                    return response
+                stat = repo.get_by_type(args['type'])
+                payload = jsonpickle.encode(stat)
+                response = app.make_response()
+                response.data = payload
+                return response
+            else:
+                response = app.make_response("Недостаточные привилегии для данного запроса")
+                response.status_code = 403
+                return response
+        response = app.make_response("Не предоставлен токен при совершении запроса")
+        response.status_code = 403
+        return response
 
     def post(self):
         if 'token' in request.cookies:
@@ -23,14 +39,14 @@ class StatisticsResource(Resource):
             if result:
                 payload = jsonpickle.decode(flask.request.data)
                 repo.create(payload["type"], payload["data"])
-                response = app.make_response("")
+                response = app.make_response("OK")
                 response.status_code = 200
-                response.data = jsonpickle.encode()
+                return response
             else:
-                response = app.make_response("The token is not valid")
+                response = app.make_response("Предоставленный токен не является валидным")
                 response.status_code = 403
                 return response
-        response = app.make_response("No valid token supplied")
+        response = app.make_response("Не предоставлен токен при совершении запроса")
         response.status_code = 403
         return response
 
